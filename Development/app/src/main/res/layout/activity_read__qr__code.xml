@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
         android:layout_margin="20dp"
-        android:text="Scan"
+        android:text="@string/scan"
         android:textColor="#000000"
         android:textSize="30dp" />
 
@@ -26,7 +26,7 @@
         android:layout_margin="10dp"
         android:gravity="center"
         android:onClick="scanQR"
-        android:text="Scanner Code"
+        android:text="@string/scanner"
         android:textSize="18dp" >
     </Button>
 </LinearLayout>
