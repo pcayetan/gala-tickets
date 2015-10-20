@@ -11,4 +11,6 @@
     <string name="ebillet_false">Le billet n\'est pas valide</string>
     <string name="id">id</string>
     <string name="key">key</string>
+    <string name="barCode">code bar</string>
+    <string name="check">Vérifier</string>
 </resources>

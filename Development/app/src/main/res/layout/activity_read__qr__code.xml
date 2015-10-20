@@ -29,4 +29,27 @@
         android:text="@string/scanner"
         android:textSize="18dp" >
     </Button>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="5"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:hint="@string/barCode"
+            android:id="@+id/barCode"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/check"
+            android:id="@+id/ButtonBarCode"
+            android:layout_weight="2"
+            android:layout_gravity="right"/>
+    </LinearLayout>
+
 </LinearLayout>

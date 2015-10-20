@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 
-public class Read_QR_Code extends ActionBarActivity {
+public class Read_QR_Code extends ActionBarActivity implements View.OnClickListener {
 
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     private ArrayList<Key_List> key_list;
@@ -40,6 +41,23 @@ public class Read_QR_Code extends ActionBarActivity {
         Intent intent = getIntent();
         if (intent != null) {
             key_list = intent.getParcelableArrayListExtra("key_list");
+        }
+
+        findViewById(R.id.ButtonBarCode).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.ButtonBarCode :
+                EditText barCode = (EditText)findViewById(R.id.barCode);
+                String str = barCode.getText().toString();
+                if (str.isEmpty()) {
+                    display(getString(R.string.empty_text_area), false);
+                }
+                else {
+                    validateTicket(str);
+                }
         }
     }
 
