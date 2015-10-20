@@ -9,4 +9,6 @@
     <string name="error_lib_empty">Veuillez entrer au moins une clé valide</string>
     <string name="ebillet_true">Le billet est valide</string>
     <string name="ebillet_false">Le billet n\'est pas valide</string>
+    <string name="id">id</string>
+    <string name="key">key</string>
 </resources>

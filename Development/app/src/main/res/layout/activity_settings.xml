@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="478dp"
+        android:layout_height="wrap_content"
         android:id="@+id/listView"/>
 
     <LinearLayout
@@ -19,18 +19,15 @@
             android:id="@+id/id"
             android:layout_weight="1"
             android:numeric="integer"
-            android:layout_below="@+id/listView"
-            android:hint="id"/>
+            android:hint="@string/id" />
 
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/key"
             android:layout_weight="3"
-            android:layout_toRightOf="@id/id"
             android:autoText="false"
-            android:hint="key"
-            />
+            android:hint="@string/key" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -38,8 +35,7 @@
             android:layout_height="wrap_content"
             android:text="@string/new_key"
             android:layout_weight="1"
-            android:id="@+id/new_key"
-            android:layout_toRightOf="@id/key"/>
+            android:id="@+id/new_key" />
 
     </LinearLayout>
 </RelativeLayout>
