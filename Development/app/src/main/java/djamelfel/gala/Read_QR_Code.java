@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,14 +100,14 @@ public class Read_QR_Code extends ActionBarActivity {
                 String hmac = hmacDigest(str[0] + " " + str[1] + " " + str[2], key.getKey(),
                         "HmacSHA1");
                 if(str[3].equals(hmac.substring(0, 8).toUpperCase())) {
-                    display("youpi", true);
+                    display(getString(R.string.ebillet_true), true);
                     found = true;
                 }
                 return;
             }
         }
         if (!found) {
-            display("Baddd", false);
+            display(getString(R.string.ebillet_false), false);
         }
     }
 
@@ -135,8 +134,9 @@ public class Read_QR_Code extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_read__qr__code, menu);
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_read__qr__code, menu);
+
         return true;
     }
 

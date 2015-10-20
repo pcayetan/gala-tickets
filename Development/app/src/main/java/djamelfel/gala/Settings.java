@@ -1,5 +1,6 @@
 package djamelfel.gala;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.database.MatrixCursor;
 import android.os.Bundle;
@@ -62,22 +63,24 @@ public class Settings extends ActionBarActivity implements View.OnClickListener 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.retour) {
-            Intent intent = new Intent(Settings.this, Read_QR_Code.class);
-            intent.putParcelableArrayListExtra("key_list", key_list);
-            startActivity(intent);
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(Settings.this, Read_QR_Code.class);
+                intent.putParcelableArrayListExtra("key_list", key_list);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void updateView() {

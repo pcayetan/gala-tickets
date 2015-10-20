@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Gala</string>
-    <string name="settings">Settings</string>
-    <string name="action_settings">Settings</string>
+    <string name="settings">Réglages</string>
     <string name="new_key">Nouvel clé</string>
-    <string name="empty_text_area">veuillez saisir les champs</string>
-    <string name="retour">retour</string>
+    <string name="empty_text_area">Veuillez saisir les champs</string>
+    <string name="stepBack">Retour</string>
     <string name="scan">Scan</string>
     <string name="scanner">Scanner Code</string>
     <string name="error_lib_empty">Veuillez entrer au moins une clé valide</string>
+    <string name="ebillet_true">Le billet est valide</string>
+    <string name="ebillet_false">Le billet n\'est pas valide</string>
 </resources>
