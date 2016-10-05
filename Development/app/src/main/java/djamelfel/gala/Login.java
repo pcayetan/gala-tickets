@@ -45,6 +45,10 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View vue) {
+        final Button button = (Button)findViewById(R.id.button_ipAddress);
+        button.setEnabled(false);
+        button.setText("Connection en cours ...");
+
         String myIpString = _ipAddress.getText().toString();
         String myPortString = _portNumber.getText().toString();
         final String server = "http://" + myIpString + ":" + myPortString;
@@ -52,9 +56,13 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
         // check if ip address is right
         if (!InetAddressUtils.isIPv4Address(myIpString)) {
             display(getString(R.string.errorIP), false);
+            button.setEnabled(true);
+            button.setText(getText(R.string.validate));
         }
         else if (myPortString.isEmpty()) {
             display(getString(R.string.errorPORT), false);
+            button.setEnabled(true);
+            button.setText(getText(R.string.validate));
         }
         else {
             AsyncHttpClient client = new AsyncHttpClient();
@@ -83,16 +91,22 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     display(getString(R.string.serverError), false);
+                    button.setEnabled(true);
+                    button.setText(getText(R.string.validate));
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     display(getString(R.string.serverError), false);
+                    button.setEnabled(true);
+                    button.setText(getText(R.string.validate));
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                     display(getString(R.string.serverError), false);
+                    button.setEnabled(true);
+                    button.setText(getText(R.string.validate));
                 }
 
             });
