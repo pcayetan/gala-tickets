@@ -175,6 +175,7 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
 
                     // Send Post Request
                     AsyncHttpClient client = new AsyncHttpClient();
+                    client.setTimeout(5000);
                     client.post(this, server + "/validate", entity, "application/json",
                             new JsonHttpResponseHandler() {
                         @Override

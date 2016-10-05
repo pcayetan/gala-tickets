@@ -66,6 +66,7 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
         }
         else {
             AsyncHttpClient client = new AsyncHttpClient();
+            client.setTimeout(5000);
             client.get(server + "/keys", new JsonHttpResponseHandler() {
 
                 @Override
