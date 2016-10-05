@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -179,9 +178,21 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
                     client.post(this, server + "/validate", entity, "application/json",
                             new JsonHttpResponseHandler() {
                         @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                            Log.i("debug", "toto ");
-                            Log.i("debug", response.toString());
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                if (response.getBoolean("valid")) {
+                                    display(getString(R.string.ebillet_true + response.getInt
+                                            ("avaliable")), true);
+                                }
+                                else if (response.getInt("avaliable") < 0) {
+                                    display(getString(R.string.ebillet_sizeOff), false);
+                                }
+                                else {
+                                    display(getString(R.string.ebillet_false), false);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
