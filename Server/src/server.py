@@ -70,6 +70,6 @@ def UpdateEntry(db, data, obj):
     return dict(response)
 
 
-app.run(host='localhost', port=8080, debug=True)
+app.run(host='10.1.1.163', port=8080, debug=True)
 
 app.uninstall(plugin)
