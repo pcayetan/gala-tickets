@@ -70,7 +70,7 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
             case R.id.ButtonBarCode :
                 // Save and Reset to default code bar
                 String str = _barCode.getText().toString();
-                //_barCode.setText("", TextView.BufferType.EDITABLE);
+                _barCode.setText("", TextView.BufferType.EDITABLE);
 
                 if (str.isEmpty()) {
                     display(getString(R.string.empty_text_area), false);
