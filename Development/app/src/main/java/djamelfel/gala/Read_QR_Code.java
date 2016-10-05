@@ -160,8 +160,8 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
                     try {
                         // Set parameters in JSON structure
                         jsonParams.put("verif", str[3]);
-                        jsonParams.put("nb", nbrPlaceSelect);
-                        jsonParams.put("qt", nbrPlaceTot);
+                        jsonParams.put("nb", nbrPlaceTot);
+                        jsonParams.put("qt", nbrPlaceSelect);
 
                         // Set JSON parameters for Post request
                         entity = new StringEntity(jsonParams.toString());
