@@ -13,7 +13,7 @@
     <string name="label_ipAddress">Adresse IP</string>
     <string name="label_port">Numéro de Port</string>
     <string name="connect">Se connecter</string>
-    <string name="connecting">Connection en cours ...</string>
+    <string name="connecting">Connection en cours …</string>
     <string name="nbPlace">Nombre de place</string>
     <string name="nbPlaceOversize">Le nombre de place selectionné excéde le nombre de place
     disponible pour ce billet</string>
@@ -24,4 +24,7 @@
         \'192.168.0.1\'</string>
     <string name="errorPORT">Erreur: Vérifiez le numéro de port</string>
     <string name="ex_3">ex: 3</string>
+    <string name="ebillet_mineur">Cette place est une place pour mineur !</string>
+    <string name="cancel">Annuler</string>
+    <string name="cancelled">L\'opération a été annulé</string>
 </resources>

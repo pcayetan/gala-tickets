@@ -38,7 +38,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class Read_QR_Code extends ActionBarActivity implements View.OnClickListener {
 
-    static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
+    private static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     private ArrayList<Key_List> key_list = null;
     private String server;
     private EditText _nbrPlace;
@@ -153,69 +153,95 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
                     // Ticket is valid
                     idFound = true;
 
-                    JSONObject jsonParams = new JSONObject();
-                    StringEntity entity = null;
-
-                    try {
-                        // Set parameters in JSON structure
-                        jsonParams.put("verif", str[3]);
-                        jsonParams.put("nb", nbrPlaceTot);
-                        jsonParams.put("qt", nbrPlaceSelect);
-
-                        // Set JSON parameters for Post request
-                        entity = new StringEntity(jsonParams.toString());
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                    if (key.getIs_child()) {
+                        showChildDialog(Read_QR_Code.this, str[3], nbrPlaceTot, nbrPlaceSelect);
                     }
-
-                    // Send Post Request
-                    AsyncHttpClient client = new AsyncHttpClient();
-                    client.setTimeout(5000);
-                    client.post(this, server + "/validate", entity, "application/json",
-                            new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            try {
-                                if (response.getBoolean("valid")) {
-                                    display(getString(R.string.ebillet_true) + String.valueOf(
-                                            response.getInt("available")), true);
-                                }
-                                else if (response.getInt("available") < 0) {
-                                    display(getString(R.string.ebillet_sizeOff), false);
-                                }
-                                else {
-                                    display(getString(R.string.ebillet_false), false);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                            display(getString(R.string.serverError), false);
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            display(getString(R.string.serverError), false);
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                            display(getString(R.string.serverError), false);
-                        }
-                    });
+                    else {
+                        sendRequest(str[3], nbrPlaceTot, nbrPlaceSelect);
+                    }
                 }
             }
         }
         if (!idFound) {
             display(getString(R.string.ebillet_false), false);
         }
+    }
+
+    private AlertDialog showChildDialog(final Activity act, final String hash, final int nbrPlaceTot,
+                                        final int nbrPlaceSelect) {
+        AlertDialog.Builder childDialog = new AlertDialog.Builder(act);
+        childDialog.setMessage(R.string.ebillet_mineur);
+        childDialog.setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                sendRequest(hash, nbrPlaceTot, nbrPlaceSelect);
+            }
+        });
+        childDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                display(getString(R.string.cancelled), true);
+            }
+        });
+        return childDialog.show();
+    }
+
+    private void sendRequest(String hash, int nbrPlaceTot, int nbrPlaceSelect) {
+        JSONObject jsonParams = new JSONObject();
+        StringEntity entity = null;
+
+        try {
+            // Set parameters in JSON structure
+            jsonParams.put("verif", hash);
+            jsonParams.put("nb", nbrPlaceTot);
+            jsonParams.put("qt", nbrPlaceSelect);
+
+            // Set JSON parameters for Post request
+            entity = new StringEntity(jsonParams.toString());
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        // Send Post Request
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(5000);
+        client.post(this, server + "/validate", entity, "application/json",
+                new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            if (response.getBoolean("valid")) {
+                                display(getString(R.string.ebillet_true) + String.valueOf(
+                                        response.getInt("available")), true);
+                            }
+                            else if (response.getInt("available") < 0) {
+                                display(getString(R.string.ebillet_sizeOff), false);
+                            }
+                            else {
+                                display(getString(R.string.ebillet_false), false);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        display(getString(R.string.serverError), false);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        display(getString(R.string.serverError), false);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                        display(getString(R.string.serverError), false);
+                    }
+                });
     }
 
     /**

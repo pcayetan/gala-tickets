@@ -9,17 +9,20 @@ import java.io.Serializable;
  * Created by djamel on 17/10/15.
  */
 public class Key_List implements Parcelable, Serializable {
-    int id;
-    String key;
+    private int id;
+    private String key;
+    private boolean is_child;
 
-    public Key_List(int id, String key) {
+    public Key_List(int id, String key, boolean is_child) {
         this.id = id;
         this.key = key;
+        this.is_child = is_child;
     }
 
     protected Key_List(Parcel in) {
         this.id = in.readInt();
         this.key = in.readString();
+        this.is_child = in.readByte() != 0;
     }
 
     public int getId() {
@@ -28,6 +31,10 @@ public class Key_List implements Parcelable, Serializable {
 
     public String getKey() {
         return this.key;
+    }
+
+    public boolean getIs_child() {
+        return this.is_child;
     }
 
     @Override
@@ -39,6 +46,7 @@ public class Key_List implements Parcelable, Serializable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeString(this.key);
+        dest.writeByte((byte) (this.is_child ? 1 : 0));
     }
 
 

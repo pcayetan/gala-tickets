@@ -76,7 +76,7 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
                         for (int index = 0; index < response.length(); index++) {
                             element = response.getJSONObject(index);
                             Key_List key = new Key_List(element.getInt("id"), element.getString
-                                    ("key"));
+                                    ("key"), element.getBoolean("is_child"));
                             key_list.add(key);
                         }
                     } catch (JSONException e) {

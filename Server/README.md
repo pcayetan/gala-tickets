@@ -57,11 +57,13 @@ data/keys.json.example
 [
 	{
 		"id": 1120,
-		"key": "VDLV7897IEetisuare"
+		"key": "VDLV7897IEetisuare",
+		"is_child": true
 	},
 	{
 		"id": 7988,
-		"key": "TISEdodp7897tesiuaV8V"
+		"key": "TISEdodp7897tesiuaV8V",
+		"is_child": false
 	}
 ]
 ```
