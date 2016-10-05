@@ -1,10 +1,7 @@
 <resources>
-    <string name="app_name">Gala</string>
-    <string name="settings">Réglages</string>
-    <string name="new_key">Nouvel clé</string>
+    <string name="app_name">Gala de prestige UTBM</string>
     <string name="empty_text_area">Veuillez saisir les champs</string>
-    <string name="stepBack">Retour</string>
-    <string name="scan">Scan</string>
+    <string name="scan">Billeterie</string>
     <string name="scanner">Scanner Code</string>
     <string name="error_lib_empty">Veuillez entrer au moins une clé valide</string>
     <string name="ebillet_true">Le billet est valide</string>
@@ -13,4 +10,17 @@
     <string name="key">key</string>
     <string name="barCode">code bar</string>
     <string name="check">Vérifier</string>
+    <string name="sizeOff">Nombre de place maximum atteint : </string>
+    <string name="label_ipAddress">Adresse IP</string>
+    <string name="label_port">Numéro de Port</string>
+    <string name="validate">Valider</string>
+    <string name="nbPlace">Nombre de place</string>
+    <string name="nbPlaceOversize">Le nombre de place selectionné excéde le nombre de place
+    disponible</string>
+    <string name="noQRCodeApplication">Auncun lecteur de QRCode n\'a été trouvé</string>
+    <string name="downloadQRCode">Télécharger un scanner ?</string>
+    <string name="serverError">Erreur: Communication serveur</string>
+    <string name="errorIP">Wrong IP Address: Please try with an IP Address in the following form:
+        \'192.168.0.1\'</string>
+    <string name="ex_3">ex: 3</string>
 </resources>

@@ -3,10 +3,12 @@ package djamelfel.gala;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * Created by djamel on 17/10/15.
  */
-public class Key_List implements Parcelable {
+public class Key_List implements Parcelable, Serializable {
     int id;
     String key;
 

@@ -1,55 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    android:orientation="vertical"
-    tools:context="com.javacodegeeks.androidstartactivityforresultexample.ActivityOne" >
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
-        android:layout_margin="20dp"
         android:text="@string/scan"
         android:textColor="#000000"
-        android:textSize="30dp" />
+        android:textSize="30sp"
+        android:layout_centerHorizontal="true"/>
+
+
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/textView1"
+        android:id="@+id/space1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/nbPlace"
+        android:id="@+id/textView3"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/space1"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/textView3"
+        android:id="@+id/id_nbrPlace"
+        android:hint="@string/ex_3"
+        android:autoText="false"/>
+
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/textView3"
+        android:id="@+id/space2"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/barCode"
+        android:id="@+id/barCode"
+        android:layout_below="@+id/space2"/>
 
     <Button
-        android:id="@+id/scanner"
-        android:layout_width="250dp"
-        android:layout_height="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/check"
+        android:id="@+id/ButtonBarCode"
+        android:layout_gravity="center_vertical"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/barCode"/>
+
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/barCode"
+        android:id="@+id/space3"/>
+
+    <Button
+        android:id="@+id/Scanner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
         android:gravity="center"
-        android:onClick="scanQR"
         android:text="@string/scanner"
-        android:textSize="18dp" >
+        android:textSize="18sp"
+        android:onClick="scanQR"
+        android:layout_below="@+id/space3"
+        android:layout_alignParentEnd="true"
+        >
     </Button>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="5"
-        android:layout_marginTop="20dp">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:hint="@string/barCode"
-            android:id="@+id/barCode"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/check"
-            android:id="@+id/ButtonBarCode"
-            android:layout_weight="2"
-            android:layout_gravity="right"/>
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
