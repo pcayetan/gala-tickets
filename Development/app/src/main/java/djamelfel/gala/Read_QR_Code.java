@@ -149,7 +149,7 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
                 // generate HMAC in hex
                 String hmac = hmacDigest(str[0]+" "+str[1]+" "+str[2], key.getKey(), "HmacSHA1");
 
-                if(str[3].equals(hmac.substring(0, str[3].length()).toUpperCase())) {
+                if(str[3].equals(hmac.substring(0, 8).toUpperCase())) {
                     // Ticket is valid
                     idFound = true;
 
