@@ -181,10 +181,10 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             try {
                                 if (response.getBoolean("valid")) {
-                                    display(getString(R.string.ebillet_true + response.getInt
-                                            ("avaliable")), true);
+                                    display(getString(R.string.ebillet_true) + String.valueOf(
+                                            response.getInt("available")), true);
                                 }
-                                else if (response.getInt("avaliable") < 0) {
+                                else if (response.getInt("available") < 0) {
                                     display(getString(R.string.ebillet_sizeOff), false);
                                 }
                                 else {

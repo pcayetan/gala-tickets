@@ -83,6 +83,6 @@ Réception :
 ```json
 {
 	"valid": true, // true ou false selon si valide ou non
-	"avaliable": 7 // Nombre de places restantes sur le billet
+	"available": 7 // Nombre de places restantes sur le billet
 }
 ```
