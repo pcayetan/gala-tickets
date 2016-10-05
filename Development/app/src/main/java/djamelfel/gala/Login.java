@@ -114,7 +114,12 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
         }
     }
 
-
+    /**
+     *
+     * @param msg
+     * @param success
+     * @info print on screen a message in red if success in false or green if it's true
+     */
     public void display(String msg, boolean success) {
         LayoutInflater inflater = getLayoutInflater();
         View layout;
