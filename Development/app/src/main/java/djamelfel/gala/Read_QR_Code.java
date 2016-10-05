@@ -206,6 +206,12 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
         }
     }
 
+    /**
+     *
+     * @param msg
+     * @param success
+     * @info print on screen a message in red if success in false or green if it's true
+     */
     public void display(String msg, boolean success) {
         LayoutInflater inflater = getLayoutInflater();
         View layout;
@@ -227,6 +233,13 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
         toast.show();
     }
 
+    /**
+     *
+     * @param msg
+     * @param keyString
+     * @param algo
+     * @return hmac in hex from a message, a key and an algorithm
+     */
     public static String hmacDigest(String msg, String keyString, String algo) {
         String digest = null;
         try {
