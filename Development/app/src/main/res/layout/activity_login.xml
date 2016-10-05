@@ -64,7 +64,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/validate"
+        android:text="@string/connect"
         android:id="@+id/button_ipAddress"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="false"

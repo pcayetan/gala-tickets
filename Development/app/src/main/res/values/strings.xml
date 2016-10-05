@@ -4,25 +4,24 @@
     <string name="scan">Billeterie</string>
     <string name="scanner">Scanner Code</string>
     <string name="error_lib_empty">Veuillez entrer au moins une clé valide</string>
-    <string name="ebillet_true">Le billet est valide</string>
-    <string name="ebillet_false">Le billet n\'est pas valide</string>
-    <string name="id">id</string>
-    <string name="key">key</string>
-    <string name="barCode">code bar</string>
-    <string name="check">Vérifier</string>
-    <string name="sizeOff">Nombre de place maximum atteint : </string>
+    <string name="ebillet_true">Billet valide, nombre de place restante: </string>
+    <string name="ebillet_false">Billet non valide</string>
+    <string name="ebillet_sizeOff">Plus de place valide</string>
+    <string name="ebillet_available"></string>
+    <string name="barCode">Code bar</string>
+    <string name="check">Vérifier billet</string>
     <string name="label_ipAddress">Adresse IP</string>
     <string name="label_port">Numéro de Port</string>
-    <string name="validate">Valider</string>
-    <string name="connection">Connection en cours ...</string>
+    <string name="connect">Se connecter</string>
+    <string name="connecting">Connection en cours ...</string>
     <string name="nbPlace">Nombre de place</string>
     <string name="nbPlaceOversize">Le nombre de place selectionné excéde le nombre de place
-    disponible</string>
-    <string name="noQRCodeApplication">Auncun lecteur de QRCode n\'a été trouvé</string>
+    disponible pour ce billet</string>
+    <string name="noQRCodeApplication">Scanner de QRCode non disponnible sur le Smartphone</string>
     <string name="downloadQRCode">Télécharger un scanner ?</string>
     <string name="serverError">Erreur: Communication serveur</string>
-    <string name="errorIP">Wrong IP Address: Please try with an IP Address in the following
-        form: \'192.168.0.1\'</string>
-    <string name="errorPORT">Wrong port number</string>
+    <string name="errorIP">Erreur d\'Adressage IP: Essayez avec une adresse tel que
+        \'192.168.0.1\'</string>
+    <string name="errorPORT">Erreur: Vérifiez le numéro de port</string>
     <string name="ex_3">ex: 3</string>
 </resources>

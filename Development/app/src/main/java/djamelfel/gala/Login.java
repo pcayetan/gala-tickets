@@ -47,7 +47,7 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
     public void onClick(View vue) {
         final Button button = (Button)findViewById(R.id.button_ipAddress);
         button.setEnabled(false);
-        button.setText(getText(R.string.connection));
+        button.setText(getText(R.string.connecting));
 
         String myIpString = _ipAddress.getText().toString();
         String myPortString = _portNumber.getText().toString();
@@ -57,12 +57,12 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
         if (!InetAddressUtils.isIPv4Address(myIpString)) {
             display(getString(R.string.errorIP), false);
             button.setEnabled(true);
-            button.setText(getText(R.string.validate));
+            button.setText(getText(R.string.connect));
         }
         else if (myPortString.isEmpty()) {
             display(getString(R.string.errorPORT), false);
             button.setEnabled(true);
-            button.setText(getText(R.string.validate));
+            button.setText(getText(R.string.connect));
         }
         else {
             AsyncHttpClient client = new AsyncHttpClient();
@@ -93,21 +93,21 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     display(getString(R.string.serverError), false);
                     button.setEnabled(true);
-                    button.setText(getText(R.string.validate));
+                    button.setText(getText(R.string.connect));
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     display(getString(R.string.serverError), false);
                     button.setEnabled(true);
-                    button.setText(getText(R.string.validate));
+                    button.setText(getText(R.string.connect));
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                     display(getString(R.string.serverError), false);
                     button.setEnabled(true);
-                    button.setText(getText(R.string.validate));
+                    button.setText(getText(R.string.connect));
                 }
 
             });
