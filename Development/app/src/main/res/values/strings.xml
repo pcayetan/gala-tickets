@@ -14,6 +14,7 @@
     <string name="label_ipAddress">Adresse IP</string>
     <string name="label_port">Numéro de Port</string>
     <string name="validate">Valider</string>
+    <string name="connection">Connection en cours ...</string>
     <string name="nbPlace">Nombre de place</string>
     <string name="nbPlaceOversize">Le nombre de place selectionné excéde le nombre de place
     disponible</string>

@@ -47,7 +47,7 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
     public void onClick(View vue) {
         final Button button = (Button)findViewById(R.id.button_ipAddress);
         button.setEnabled(false);
-        button.setText("Connection en cours ...");
+        button.setText(getText(R.string.connection));
 
         String myIpString = _ipAddress.getText().toString();
         String myPortString = _portNumber.getText().toString();
