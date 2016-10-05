@@ -20,7 +20,8 @@
     <string name="noQRCodeApplication">Auncun lecteur de QRCode n\'a été trouvé</string>
     <string name="downloadQRCode">Télécharger un scanner ?</string>
     <string name="serverError">Erreur: Communication serveur</string>
-    <string name="errorIP">Wrong IP Address: Please try with an IP Address in the following form:
-        \'192.168.0.1\'</string>
+    <string name="errorIP">Wrong IP Address: Please try with an IP Address in the following
+        form: \'192.168.0.1\'</string>
+    <string name="errorPORT">Wrong port number</string>
     <string name="ex_3">ex: 3</string>
 </resources>

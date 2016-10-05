@@ -50,7 +50,13 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
         final String server = "http://" + myIpString + ":" + myPortString;
 
         // check if ip address is right
-        if (InetAddressUtils.isIPv4Address(myIpString)) {
+        if (!InetAddressUtils.isIPv4Address(myIpString)) {
+            display(getString(R.string.errorIP), false);
+        }
+        else if (myPortString.isEmpty()) {
+            display(getString(R.string.errorPORT), false);
+        }
+        else {
             AsyncHttpClient client = new AsyncHttpClient();
             client.get(server + "/keys", new JsonHttpResponseHandler() {
 
@@ -78,10 +84,18 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     display(getString(R.string.serverError), false);
                 }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    display(getString(R.string.serverError), false);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    display(getString(R.string.serverError), false);
+                }
+
             });
-        }
-        else {
-            display(getString(R.string.errorIP), false);
         }
     }
 
