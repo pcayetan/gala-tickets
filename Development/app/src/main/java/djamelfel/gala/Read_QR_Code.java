@@ -187,6 +187,16 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
                         public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                             display(getString(R.string.serverError), false);
                         }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            display(getString(R.string.serverError), false);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            display(getString(R.string.serverError), false);
+                        }
                     });
                 }
             }
