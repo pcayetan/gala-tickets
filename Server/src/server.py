@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # @Author: klmp200
 # @Date:   2016-07-03 17:57:28
@@ -6,12 +6,15 @@
 # @Last Modified time: 2016-07-04 17:50:18
 
 from bottle import Bottle, static_file, request
-from bottle.ext import sqlite
+import os
 
 app = Bottle()
 plugin = sqlite.Plugin(dbfile='../data/sqliteDB.db')
 app.install(plugin)
 
+@app.route('/')
+def GetApp():
+    return static_file("app.apk", root="../data/")
 
 @app.route('/keys')
 def GetKeys():
@@ -70,6 +73,6 @@ def UpdateEntry(db, data, obj):
     return dict(response)
 
 
-app.run(host='localhost', port=8080, debug=True)
+app.run(host='0.0.0.0', port=8080, debug=True)
 
 app.uninstall(plugin)
