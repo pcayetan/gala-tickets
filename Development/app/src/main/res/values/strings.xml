@@ -1,16 +1,30 @@
 <resources>
-    <string name="app_name">Gala</string>
-    <string name="settings">Réglages</string>
-    <string name="new_key">Nouvel clé</string>
+    <string name="app_name">Gala de prestige UTBM</string>
     <string name="empty_text_area">Veuillez saisir les champs</string>
-    <string name="stepBack">Retour</string>
-    <string name="scan">Scan</string>
+    <string name="scan">Billeterie</string>
     <string name="scanner">Scanner Code</string>
     <string name="error_lib_empty">Veuillez entrer au moins une clé valide</string>
-    <string name="ebillet_true">Le billet est valide</string>
-    <string name="ebillet_false">Le billet n\'est pas valide</string>
-    <string name="id">id</string>
-    <string name="key">key</string>
-    <string name="barCode">code bar</string>
-    <string name="check">Vérifier</string>
+    <string name="ebillet_true">Billet valide, nombre de place restante: </string>
+    <string name="ebillet_false">Billet non valide</string>
+    <string name="ebillet_sizeOff">Plus de place valide</string>
+    <string name="ebillet_available"></string>
+    <string name="barCode">Code bar</string>
+    <string name="check">Vérifier billet</string>
+    <string name="label_ipAddress">Adresse IP</string>
+    <string name="label_port">Numéro de Port</string>
+    <string name="connect">Se connecter</string>
+    <string name="connecting">Connection en cours …</string>
+    <string name="nbPlace">Nombre de place</string>
+    <string name="nbPlaceOversize">Le nombre de place selectionné excéde le nombre de place
+    disponible pour ce billet</string>
+    <string name="noQRCodeApplication">Scanner de QRCode non disponnible sur le Smartphone</string>
+    <string name="downloadQRCode">Télécharger un scanner ?</string>
+    <string name="serverError">Erreur: Communication serveur</string>
+    <string name="errorIP">Erreur d\'Adressage IP: Essayez avec une adresse tel que
+        \'192.168.0.1\'</string>
+    <string name="errorPORT">Erreur: Vérifiez le numéro de port</string>
+    <string name="ex_3">ex: 3</string>
+    <string name="ebillet_mineur">Cette place est une place pour mineur !</string>
+    <string name="cancel">Annuler</string>
+    <string name="cancelled">L\'opération a été annulé</string>
 </resources>

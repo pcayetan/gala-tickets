@@ -1,5 +1,5 @@
 CREATE Table ticket (
 	id		INTEGER PRIMARY KEY AUTOINCREMENT,
 	verifKey	TEXT UNIQUE NOT NULL,
-	avaliablePlaces INTEGER NOT NULL
+	availablePlaces INTEGER NOT NULL
 );

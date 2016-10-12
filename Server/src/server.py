@@ -41,34 +41,34 @@ def Validate(db):
 
 
 def NewEntry(db, data):
-    avaliable = data['nb'] - data['qt']
+    available = data['nb'] - data['qt']
     response = {
-        "avaliable": avaliable,
+        "available": available,
         "valid": True
     }
 
-    db.execute('INSERT into ticket(verifKey, avaliablePlaces) values (?, ?)',
-               (data['verif'], avaliable))
+    db.execute('INSERT into ticket(verifKey, availablePlaces) values (?, ?)',
+               (data['verif'], available))
 
     return dict(response)
 
 
 def UpdateEntry(db, data, obj):
-    avaliableP = obj['avaliablePlaces'] - data['qt']
+    availableP = obj['availablePlaces'] - data['qt']
 
-    if avaliableP >= 0:
-        avaliable = True
+    if availableP >= 0:
+        available = True
     else:
-        avaliableP = obj['avaliablePlaces']
-        avaliable = False
+        availableP = obj['availablePlaces']
+        available = False
 
     response = {
-        "avaliable": avaliableP,
-        "valid": avaliable
+        "available": availableP,
+        "valid": available
     }
 
-    db.execute('UPDATE ticket SET avaliablePlaces=:av WHERE id=:id',
-               {"av": avaliableP, "id": obj['id']})
+    db.execute('UPDATE ticket SET availablePlaces=:av WHERE id=:id',
+               {"av": availableP, "id": obj['id']})
 
     return dict(response)
 

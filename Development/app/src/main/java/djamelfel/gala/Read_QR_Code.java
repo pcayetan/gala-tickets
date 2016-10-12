@@ -9,13 +9,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -26,12 +32,17 @@ import java.util.Iterator;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
+
 
 public class Read_QR_Code extends ActionBarActivity implements View.OnClickListener {
 
-    static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
-    private ArrayList<Key_List> key_list;
-
+    private static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
+    private ArrayList<Key_List> key_list = null;
+    private String server;
+    private EditText _nbrPlace;
+    private EditText _barCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,23 +52,33 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
         Intent intent = getIntent();
         if (intent != null) {
             key_list = intent.getParcelableArrayListExtra("key_list");
+            server = intent.getStringExtra("server");
         }
 
-        findViewById(R.id.ButtonBarCode).setOnClickListener(this);
+        _nbrPlace = (EditText)findViewById(R.id.id_nbrPlace);
+        _nbrPlace.setText("1", TextView.BufferType.EDITABLE);
+
+        _barCode = (EditText)findViewById(R.id.barCode);
+
+        Button buttonBarCode = (Button) findViewById(R.id.ButtonBarCode);
+        buttonBarCode.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.ButtonBarCode :
-                EditText barCode = (EditText)findViewById(R.id.barCode);
-                String str = barCode.getText().toString();
+                // Save and Reset to default code bar
+                String str = _barCode.getText().toString();
+                _barCode.setText("", TextView.BufferType.EDITABLE);
+
                 if (str.isEmpty()) {
                     display(getString(R.string.empty_text_area), false);
                 }
                 else {
                     validateTicket(str);
                 }
+                break;
         }
     }
 
@@ -68,11 +89,10 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
         }
         try {
             Intent intent = new Intent(ACTION_SCAN);
-            intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-            startActivityForResult(intent, 0);
+            startActivityForResult(intent, 1);
         } catch (ActivityNotFoundException anfe) {
-            showDialog(Read_QR_Code.this, "Auncun lecteur de QRCode n'a été trouvé", "Télécharger" +
-                    " un scanner ?", "Oui", "Non").show();
+            showDialog(Read_QR_Code.this, getString(R.string.noQRCodeApplication), getString(R
+                    .string.downloadQRCode), "Oui", "Non").show();
         }
     }
 
@@ -100,7 +120,7 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             String contents = intent.getStringExtra("SCAN_RESULT");
 
             validateTicket(contents);
@@ -108,27 +128,128 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
     }
 
     public void validateTicket(String result) {
-        String str[] = result.split(" ");
-        Boolean found = false;
+        final String str[] = result.split(" ");
+        int nbrPlaceSelect = Integer.parseInt(_nbrPlace.getText().toString());
+        int nbrPlaceTot = Integer.parseInt(str[2]);
+        Boolean idFound = false;
+
+        // Reset to default number of place
+        _nbrPlace.setText("1", TextView.BufferType.EDITABLE);
+
+        if (Integer.parseInt(str[2]) < nbrPlaceSelect) {
+            display(getString(R.string.nbPlaceOversize), false);
+            return;
+        }
 
         Iterator<Key_List> itr = key_list.iterator();
         while (itr.hasNext()) {
             Key_List key = itr.next();
+
             if (key.getId() == Integer.parseInt(str[1])) {
-                String hmac = hmacDigest(str[0] + " " + str[1] + " " + str[2], key.getKey(),
-                        "HmacSHA1");
+                // generate HMAC in hex
+                String hmac = hmacDigest(str[0]+" "+str[1]+" "+str[2], key.getKey(), "HmacSHA1");
+
                 if(str[3].equals(hmac.substring(0, 8).toUpperCase())) {
-                    display(getString(R.string.ebillet_true), true);
-                    found = true;
+                    // Ticket is valid
+                    idFound = true;
+
+                    if (key.getIs_child()) {
+                        showChildDialog(Read_QR_Code.this, str[3], nbrPlaceTot, nbrPlaceSelect);
+                    }
+                    else {
+                        sendRequest(str[3], nbrPlaceTot, nbrPlaceSelect);
+                    }
                 }
-                return;
             }
         }
-        if (!found) {
+        if (!idFound) {
             display(getString(R.string.ebillet_false), false);
         }
     }
 
+    private AlertDialog showChildDialog(final Activity act, final String hash, final int nbrPlaceTot,
+                                        final int nbrPlaceSelect) {
+        AlertDialog.Builder childDialog = new AlertDialog.Builder(act);
+        childDialog.setMessage(R.string.ebillet_mineur);
+        childDialog.setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                sendRequest(hash, nbrPlaceTot, nbrPlaceSelect);
+            }
+        });
+        childDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                display(getString(R.string.cancelled), true);
+            }
+        });
+        return childDialog.show();
+    }
+
+    private void sendRequest(String hash, int nbrPlaceTot, int nbrPlaceSelect) {
+        JSONObject jsonParams = new JSONObject();
+        StringEntity entity = null;
+
+        try {
+            // Set parameters in JSON structure
+            jsonParams.put("verif", hash);
+            jsonParams.put("nb", nbrPlaceTot);
+            jsonParams.put("qt", nbrPlaceSelect);
+
+            // Set JSON parameters for Post request
+            entity = new StringEntity(jsonParams.toString());
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        // Send Post Request
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.setTimeout(5000);
+        client.post(this, server + "/validate", entity, "application/json",
+                new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            if (response.getBoolean("valid")) {
+                                display(getString(R.string.ebillet_true) + String.valueOf(
+                                        response.getInt("available")), true);
+                            }
+                            else if (response.getInt("available") < 0) {
+                                display(getString(R.string.ebillet_sizeOff), false);
+                            }
+                            else {
+                                display(getString(R.string.ebillet_false), false);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        display(getString(R.string.serverError), false);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        display(getString(R.string.serverError), false);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                        display(getString(R.string.serverError), false);
+                    }
+                });
+    }
+
+    /**
+     *
+     * @param msg
+     * @param success
+     * @info print on screen a message in red if success in false or green if it's true
+     */
     public void display(String msg, boolean success) {
         LayoutInflater inflater = getLayoutInflater();
         View layout;
@@ -150,30 +271,13 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
         toast.show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_read__qr__code, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(Read_QR_Code.this, Settings.class);
-            if (key_list != null)
-                if (!key_list.isEmpty())
-                    intent.putParcelableArrayListExtra("key_list", key_list);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
+    /**
+     *
+     * @param msg
+     * @param keyString
+     * @param algo
+     * @return hmac in hex from a message, a key and an algorithm
+     */
     public static String hmacDigest(String msg, String keyString, String algo) {
         String digest = null;
         try {
