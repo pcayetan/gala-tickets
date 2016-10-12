@@ -6,7 +6,7 @@
 # @Last Modified time: 2016-07-04 17:50:18
 
 from bottle import Bottle, static_file, request
-import os
+from bottle.ext import sqlite
 
 app = Bottle()
 plugin = sqlite.Plugin(dbfile='../data/sqliteDB.db')
