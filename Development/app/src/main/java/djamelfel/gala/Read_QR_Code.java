@@ -129,14 +129,17 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
 
     public void validateTicket(String result) {
         final String str[] = result.split(" ");
+        int idTicket = Integer.parseInt(str[1]);
+        int nbrPlaceTicket = Integer.parseInt(str[2]);
         int nbrPlaceSelect = Integer.parseInt(_nbrPlace.getText().toString());
-        int nbrPlaceTot = Integer.parseInt(str[2]);
+        int nbrPlaceTot = Integer.parseInt(str[3]);
+        String keyTicket = str[4];
         Boolean idFound = false;
 
         // Reset to default number of place
         _nbrPlace.setText("1", TextView.BufferType.EDITABLE);
 
-        if (Integer.parseInt(str[2]) < nbrPlaceSelect) {
+        if (nbrPlaceTicket < nbrPlaceSelect) {
             display(getString(R.string.nbPlaceOversize), false);
             return;
         }
@@ -145,19 +148,20 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
         while (itr.hasNext()) {
             Key_List key = itr.next();
 
-            if (key.getId() == Integer.parseInt(str[1])) {
+            if (key.getId() == idTicket) {
                 // generate HMAC in hex
-                String hmac = hmacDigest(str[0]+" "+str[1]+" "+str[2], key.getKey(), "HmacSHA1");
+                String hmac = hmacDigest(str[0]+" "+str[1]+" "+str[2] +" "+str[3], key.getKey(),
+                        "HmacSHA1");
 
-                if(str[3].equals(hmac.substring(0, 8).toUpperCase())) {
+                if(keyTicket.equals(hmac.substring(0, 8).toUpperCase())) {
                     // Ticket is valid
                     idFound = true;
 
                     if (key.getIs_child()) {
-                        showChildDialog(Read_QR_Code.this, str[3], nbrPlaceTot, nbrPlaceSelect);
+                        showChildDialog(Read_QR_Code.this, keyTicket, nbrPlaceTot, nbrPlaceSelect);
                     }
                     else {
-                        sendRequest(str[3], nbrPlaceTot, nbrPlaceSelect);
+                        sendRequest(keyTicket, nbrPlaceTot, nbrPlaceSelect);
                     }
                 }
             }
