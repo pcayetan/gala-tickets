@@ -1,6 +1,8 @@
 package djamelfel.gala;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -34,6 +36,9 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifi.setWifiEnabled(true); // true or false to activate/deactivate wifi
 
         _ipAddress = (EditText)findViewById(R.id.text_ipAddress);
         _portNumber = (EditText)findViewById(R.id.text_port);

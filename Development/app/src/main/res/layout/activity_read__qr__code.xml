@@ -84,4 +84,13 @@
         >
     </Button>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/BackGroundImageView"
+        android:layout_marginTop="15dp"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/Scanner"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>
