@@ -12,9 +12,15 @@ app = Bottle()
 plugin = sqlite.Plugin(dbfile='../data/sqliteDB.db')
 app.install(plugin)
 
-@app.route('/')
+@app.route('/app.apk')
 def GetApp():
     return static_file("app.apk", root="../data/")
+
+@app.route('/')
+def HomePage():
+    text = ''.join(("<h1>Serveur de validation de ebillets du gala</h1><p>Cliquez <a href=",
+            "/app.apk",">ici</a> pour télécarger l'application</p>"))
+    return text
 
 @app.route('/keys')
 def GetKeys():
