@@ -88,3 +88,7 @@ Réception :
 	"available": 7 // Nombre de places restantes sur le billet
 }
 ```
+
+## Interface d'administration
+
+Il est possible d'accéder à /admin pour obtenir une liste de toutes les validations effectuées et d'annuler le passage d'un billet.
