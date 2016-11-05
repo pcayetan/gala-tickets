@@ -27,6 +27,7 @@
 						<th>Clef de vérification</th>
 						<th>Places restantes</th>
 						<th>Places total disponible</th>
+						<th>Heure d'ajout</th>
 						<th>Modifier quantité</th>
 						<th>Supprimer ticket</th>
 					</tr>
@@ -37,6 +38,7 @@
 						<td>{{element['verifKey']}}</td>
 						<td>{{element['availablePlaces']}}</td>
 						<td>{{element['totalPlaces']}}</td>
+						<td>{{element['validationDate']}}</td>
 						<td>
 							<a href="/edit/qt/{{element['id']}}/1" class="button-success pure-button">+1</a>
 							<a href="/edit/qt/{{element['id']}}/-1" class="button-warning pure-button">-1</a>
@@ -71,16 +73,16 @@
 			setInterval(function (){
 				var args = {
 					"id": getUrlParameter('id'),
-					"verifKey": getUrlParameter('verifKey'),
-					"ajax": 'l'
+					"verifKey": getUrlParameter('verifKey')
 				};
-				$.get("/admin", args).done(function(data){
+				$.get("/admin/ajax", args).done(function(data){
 					var to_write = "";
 					data['data'].forEach(function(ticket){
 						to_write += "<tr>";
 						to_write += "<td>" + ticket['verifKey'] + "</td>";
 						to_write += "<td>" + ticket['availablePlaces'] + "</td>";
 						to_write += "<td>" + ticket['totalPlaces'] + "</td>";
+						to_write += "<td>" + ticket['validationDate'] + "</td>";
 						to_write += "<td><a href='/edit/qt/" + ticket['id'] + "/1' class='button-success pure-button'>+1</a>\n";
 						to_write += "<a href='/edit/qt/" + ticket['id'] + "/-1' class='button-warning pure-button'>-1</a></td>";
 						to_write += "<td><a href='/delete/" + ticket['id'] + "' class='button-error pure-button'>Supprimer</a></td>";

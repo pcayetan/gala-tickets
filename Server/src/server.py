@@ -3,16 +3,22 @@
 # @Author: klmp200
 # @Date:   2016-07-03 17:57:28
 # @Last Modified by:   klmp200
-# @Last Modified time: 2016-11-05 18:49:18
+# @Last Modified time: 2016-11-05 20:23:47
 
 from bottle import Bottle, static_file, request, template, redirect
 from bottle.ext import sqlite
+import datetime
+import settings
 
 app = Bottle()
 plugin = sqlite.Plugin(dbfile='../data/sqliteDB.db')
 app.install(plugin)
 
+
 def serialize_table(table):
+    """
+        Convert a row in a list of dict
+    """
     obj = list()
     dict_tmp = {}
     for row in table:
@@ -22,19 +28,38 @@ def serialize_table(table):
         obj.append(dict_tmp)
     return obj
 
-@app.route('/app.apk')
+
+@app.route('/gala.apk')
 def GetApp():
-    return static_file("app.apk", root="../data/")
+    """
+        Allow to download the gala
+    """
+    return static_file("gala.apk", root="../data/")
+
+
+@app.route('/scanner.apk')
+def GetScan():
+    """
+        Allow to download the qr code reader
+    """
+    return static_file("scanner.apk", root="../data/")
+
 
 @app.route('/')
 def HomePage():
-    text = ''.join(("<h1>Serveur de validation de ebillets du gala</h1><p>Cliquez <a href=",
-            "/app.apk",">ici</a> pour télécarger l'application</p>"))
-    return text
+    """
+        Home page
+    """
+    return template('home.simple')
+
 
 @app.route('/keys')
 def GetKeys():
+    """
+        Return json file for keys
+    """
     return static_file("keys.json", root="../data/")
+
 
 @app.route('/delete/<db_id>')
 def DeleteTicket(db, db_id=None):
@@ -62,38 +87,34 @@ def DisplayAdmin(db):
         id where id the id in database
         verifKey the verification key of the ticket
     """
-    table = []
-    form = ObtainGetArgs(request.query, ['id', 'verifKey', 'ajax'])
-    form['verifKey'] = form['verifKey'].upper()
-    table = SearchDb(db, form)
-    # if not form['id'] and not form['verifKey']:
-    #     table = db.execute('SELECT * from ticket').fetchall()
-    # elif form['id'] and not form['verifKey']:
-    #     table = db.execute('SELECT * from ticket where id=:id',
-    #                        {"id": form['id']}).fetchall()
-    # elif not form['id'] and form['verifKey']:
-    #     table = db.execute('SELECT * from ticket where verifKey=:key',
-    #                        {"key": form['verifKey']}).fetchall()
-    # else:
-    #     table = db.execute('SELECT * from ticket where verifKey=:key and id=:id',
-    #                        {"key": form['verifKey'],
-    #                         "id": form['id']}).fetchall()
-    tickets = serialize_table(table)
-    tickets = tickets[::-1]
-    if form['ajax']:
-        return dict(data=tickets)
-    else:
-        return template('admin.simple', table=tickets, form=form)
+    form = ObtainGetArgs(request.query, ['id', 'verifKey'])
+    tickets = SearchDb(db, form)
+    return template('admin.simple', table=tickets, form=form)
+
+
+@app.route('/admin/ajax', method='GET')
+def DisplayAdminAjax(db):
+    """
+        Get data from database same as DisplayAdmin
+        Return json for ajax request
+    """
+    form = ObtainGetArgs(request.query, ['id', 'verifKey'])
+    tickets = SearchDb(db, form)
+    return dict(data=tickets)
 
 
 def SearchDb(db, args):
+    """
+        Qwery used in db
+    """
     if args['id'] or args['verifKey']:
         table = db.execute("SELECT * from ticket where upper(verifKey) like :key or id =:id",
-                           {"key": '%' + args['verifKey'] + '%',
+                           {"key": '%' + args['verifKey'].upper() + '%',
                             "id": args['id']}).fetchall()
     else:
         table = db.execute('SELECT * from ticket').fetchall()
-    return table
+    tickets = serialize_table(table)[::-1]
+    return tickets
 
 
 def ObtainGetArgs(query, args):
@@ -129,6 +150,10 @@ def EditTicketQuantity(db, id_ticket, nb):
 
 @app.route('/validate', method='POST')
 def Validate(db):
+    """
+        Verify in bdd if the ticket exists and create it
+        Return a json to the app
+    """
 
     try:
         send = request.json
@@ -147,19 +172,24 @@ def Validate(db):
 
 
 def NewEntry(db, data):
+    """
+        Add a new ticket in bdd
+    """
     available = data['nb'] - data['qt']
     response = {
         "available": available,
         "valid": True
     }
-
-    db.execute('INSERT into ticket(verifKey, availablePlaces, totalPlaces) values (?, ?, ?)',
-               (data['verif'], available, data['nb']))
+    db.execute('INSERT into ticket(verifKey, availablePlaces, totalPlaces, validationDate) values (?, ?, ?, ?)',
+               (data['verif'], available, data['nb'], datetime.datetime.now().strftime('%Hh %Mmin %Ss')))
 
     return dict(response)
 
 
 def UpdateEntry(db, data, obj):
+    """
+        Update info in ticket
+    """
     availableP = obj['availablePlaces'] - data['qt']
 
     if availableP >= 0:
@@ -179,6 +209,6 @@ def UpdateEntry(db, data, obj):
     return dict(response)
 
 
-app.run(host='0.0.0.0', port=8080, debug=True)
+app.run(host=settings.HOST, port=settings.PORT, debug=settings.DEBUG)
 
 app.uninstall(plugin)

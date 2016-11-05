@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+	<link rel="stylesheet" type="text/css" href="/media/css/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="/media/css/pure-min.css">
+	<link rel="stylesheet" type="text/css" href="/media/css/colored-buttons.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div class="pure-g">
+		<div class="pure-u-1-24 pure-u-md-1-12 pure-u-sm-1-24"></div>
+		<div class="pure-u-22-24 pure-u-md-10-12 pure-u-sm-22-24">
+			<h1>Serveur de validation de ebillets du gala</h1>
+			<div id="accordion">
+				<h2>Section de téléchargement</h2>
+				<div>
+					<p>
+						Application de vérification : <a class="pure-button pure-button-primary" href="/gala.apk">Gala de prestige</a>
+					</p>
+					<p>
+						Application de scan : <a class="pure-button pure-button-primary" href="/scanner.apk">Barecode Reader</a>
+					</p>
+				</div>
+				<h2>Instructions d'installation</h2>
+				<div>
+					<p>Activez l'installation des applications de sources inconnues en allant dans paramètres -> sécurité -> sources inconnues (voir exemple suivant)</p>
+					<img src="/media/img/tuto1.png">
+					<img src="/media/img/tuto2.png">
+					<p>Téléchargez et installez l'application gala</p>
+					<p>Si aucun lecteur de qr code n'est installé, prenez celle fournie sur ce site</p>
+				</div>
+				<h3>Fonctionnement</h3>
+				<div>
+					Une fois que tout a été installé, il suffit de lancer l'application gala de prestige et y entrer les informations du serveur.
+				</div>
+			</div>
+		</div>
+		<div class="pure-u-1-24 pure-u-md-1-12 pure-u-sm-1-24"></div>
+	</div>
+	<footer>
+		<script type="text/javascript" src="/media/js/jquery.js"></script>
+		<script type="text/javascript" src="/media/js/jquery-ui.min.js"></script>
+		<script>
+			$( function() {
+				$( "#accordion" ).accordion({
+					heightStyle: "content"
+				});
+		} );
+  </script>
+	</footer>
+</body>
+</html>
