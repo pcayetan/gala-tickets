@@ -3,6 +3,7 @@
 <head>
 	<title>Admin</title>
 	<link rel="stylesheet" type="text/css" href="/media/css/pure-min.css">
+	<link rel="stylesheet" type="text/css" href="/media/css/colored-buttons.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 </head>
@@ -16,7 +17,7 @@
 					Recherche par id :
 					<input type="text" name="id" value="{{form['id']}}"/>
 					Clef de vérification :
-					<input type="text" name="verifKey" value="{{form['key']}}"/>
+					<input type="text" name="verifKey" value="{{form['verifKey']}}"/>
 					<button type="submit" class="pure-button pure-button-primary">Rechercher</button>
 				</form>
 			<h2>Données</h2>
@@ -26,6 +27,7 @@
 						<th>Clef de vérification</th>
 						<th>Places restantes</th>
 						<th>Places total disponible</th>
+						<th>Modifier quantité</th>
 						<th>Supprimer ticket</th>
 					</tr>
 				</thead>
@@ -35,7 +37,11 @@
 						<td>{{element['verifKey']}}</td>
 						<td>{{element['availablePlaces']}}</td>
 						<td>{{element['totalPlaces']}}</td>
-						<td><a href='/delete/{{element["id"]}}' class="pure-button pure-button-primary">Supprimer</a></td>
+						<td>
+							<a href="/edit/qt/{{element['id']}}/1" class="button-success pure-button">+1</a>
+							<a href="/edit/qt/{{element['id']}}/-1" class="button-warning pure-button">-1</a>
+						</td>
+						<td><a href='/delete/{{element["id"]}}' class="button-error pure-button">Supprimer</a></td>
 					</tr>
 					% end
 				</tbody>
@@ -75,7 +81,9 @@
 						to_write += "<td>" + ticket['verifKey'] + "</td>";
 						to_write += "<td>" + ticket['availablePlaces'] + "</td>";
 						to_write += "<td>" + ticket['totalPlaces'] + "</td>";
-						to_write += "<td><a href='/delete/" + ticket['id'] + "' class='pure-button pure-button-primary'>Supprimer</a></td>";
+						to_write += "<td><a href='/edit/qt/" + ticket['id'] + "/1' class='button-success pure-button'>+1</a>\n";
+						to_write += "<a href='/edit/qt/" + ticket['id'] + "/-1' class='button-warning pure-button'>-1</a></td>";
+						to_write += "<td><a href='/delete/" + ticket['id'] + "' class='button-error pure-button'>Supprimer</a></td>";
 						to_write += "</tr>";
 					});
 					$("#Tickets").empty();

@@ -3,7 +3,7 @@
 # @Author: klmp200
 # @Date:   2016-07-03 17:57:28
 # @Last Modified by:   klmp200
-# @Last Modified time: 2016-11-04 21:16:27
+# @Last Modified time: 2016-11-05 18:49:18
 
 from bottle import Bottle, static_file, request, template, redirect
 from bottle.ext import sqlite
@@ -63,32 +63,68 @@ def DisplayAdmin(db):
         verifKey the verification key of the ticket
     """
     table = []
-    form = {}
-    form['key'] = ""
-    form['id'] = ""
-    if request.query.verifKey:
-        request.query.verifKey = request.query.verifKey.upper()
-        form['key'] = request.query.verifKey
-    if request.query.id:
-        form['id'] = request.query.id
-    if not request.query.id and not request.query.verifKey:
-        table = db.execute('SELECT * from ticket').fetchall()
-    elif request.query.id and not request.query.verifKey:
-        table = db.execute('SELECT * from ticket where id=:id',
-                           {"id": request.query.id}).fetchall()
-    elif not request.query.id and request.query.verifKey:
-        table = db.execute('SELECT * from ticket where verifKey=:key',
-                           {"key": request.query.verifKey})
-    else:
-        table = db.execute('SELECT * from ticket where verifKey=:key and id=:id',
-                           {"key": request.query.verifKey,
-                            "id": request.query.id})
+    form = ObtainGetArgs(request.query, ['id', 'verifKey', 'ajax'])
+    form['verifKey'] = form['verifKey'].upper()
+    table = SearchDb(db, form)
+    # if not form['id'] and not form['verifKey']:
+    #     table = db.execute('SELECT * from ticket').fetchall()
+    # elif form['id'] and not form['verifKey']:
+    #     table = db.execute('SELECT * from ticket where id=:id',
+    #                        {"id": form['id']}).fetchall()
+    # elif not form['id'] and form['verifKey']:
+    #     table = db.execute('SELECT * from ticket where verifKey=:key',
+    #                        {"key": form['verifKey']}).fetchall()
+    # else:
+    #     table = db.execute('SELECT * from ticket where verifKey=:key and id=:id',
+    #                        {"key": form['verifKey'],
+    #                         "id": form['id']}).fetchall()
     tickets = serialize_table(table)
     tickets = tickets[::-1]
-    if request.query.ajax:
+    if form['ajax']:
         return dict(data=tickets)
     else:
         return template('admin.simple', table=tickets, form=form)
+
+
+def SearchDb(db, args):
+    if args['id'] or args['verifKey']:
+        table = db.execute("SELECT * from ticket where upper(verifKey) like :key or id =:id",
+                           {"key": '%' + args['verifKey'] + '%',
+                            "id": args['id']}).fetchall()
+    else:
+        table = db.execute('SELECT * from ticket').fetchall()
+    return table
+
+
+def ObtainGetArgs(query, args):
+    """
+        Fill a dict with get args in query
+        query : the query object
+        args : a list of get arguments to get
+    """
+    getargs = {}
+    for arg in args:
+        if getattr(query, arg):
+            getargs[arg] = getattr(query, arg)
+        else:
+            getargs[arg] = ""
+    return getargs
+
+
+@app.route('/edit/qt/<id_ticket>/<nb>')
+def EditTicketQuantity(db, id_ticket, nb):
+    """
+        Edit the quantity avaliable for a ticket
+    """
+    nb = int(nb)
+    ticket = db.execute('SELECT * from ticket where id=:id',
+                        {"id": id_ticket}).fetchone()
+    if ticket is not None:
+        nb_new = ticket['availablePlaces'] + nb
+        if nb_new >= 0 and nb_new <= ticket['totalPlaces']:
+            db.execute('UPDATE ticket SET availablePlaces=:av WHERE id=:id',
+                       {"av": nb_new, "id": id_ticket})
+    redirect('/admin')
 
 
 @app.route('/validate', method='POST')
