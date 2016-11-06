@@ -92,3 +92,19 @@ Réception :
 ## Interface d'administration
 
 Il est possible d'accéder à /admin pour obtenir une liste de toutes les validations effectuées et d'annuler le passage d'un billet.
+
+# Installation du serveur sur une machine
+
+Le serveur a été testé sur un raspberry pi 2 modèle B.
+
+Le principe est de fabriquer un hotspot wifi avec le raspberry et de faire tourner le serveur de ebillet en arrière plan.
+
+Pour daemoniser le serveur, il faut itiliser le script ebillet.service qui est à placer dans /etc/init.d, le modifier par rapport à la configuration réelle des fichiers et du nom d'utilisateur et d'activer le service au démarage de la machine
+
+Il faut également créer la base de donnée en se positionnant dans Server et lancer createDB.sh
+
+Il est possible d'avoir une configuration spécifique pour le serveur quisera ignorée par git en créant settings\_custom.py à côté de settings.py.
+
+Enfin, il ne faut pas oublier d'installer les dépedances du logiciel qui sont python3.4 et le contenu de requirements.txt
+
+Pour faire tourner le serveur sur le port 80 sans executer le serveur avec les droits de route, il est possible d'utiliser firewall.sh qui redirige le trafic du port 80 port 8080
