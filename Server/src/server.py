@@ -3,7 +3,7 @@
 # @Author: klmp200
 # @Date:   2016-07-03 17:57:28
 # @Last Modified by:   klmp200
-# @Last Modified time: 2016-11-05 20:23:47
+# @Last Modified time: 2016-11-08 00:46:33
 
 from bottle import Bottle, static_file, request, template, redirect
 from bottle.ext import sqlite
@@ -209,6 +209,6 @@ def UpdateEntry(db, data, obj):
     return dict(response)
 
 
-app.run(host=settings.HOST, port=settings.PORT, debug=settings.DEBUG)
+app.run(host=settings.HOST, port=settings.PORT, debug=settings.DEBUG, server='paste')
 
 app.uninstall(plugin)
