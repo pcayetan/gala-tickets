@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Webscan</title>
+	<link rel="stylesheet" type="text/css" href="/media/css/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="/media/css/pure-min.css">
+	<link rel="stylesheet" type="text/css" href="/media/css/colored-buttons.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div class="pure-g">
+		<div class="pure-u-1-24 pure-u-md-1-12 pure-u-sm-1-24"></div>
+		<div class="pure-u-22-24 pure-u-md-10-12 pure-u-sm-22-24">
+			<h1>Serveur de validation de ebillets du gala</h1>
+			<div id="response">
+				% if response['valid']:
+					% if response['valid'] == "True" and response['av']:
+						% if response['child'] and response['child'] == 'True':
+						<p class="pure-button button-warning" style="font-size: 30px">Ceci est une place pour mineur !</p><br>
+						% end
+						<p class="pure-button button-success">Billet valide : {{response['av']}} places restantes</p>
+					% else:
+						<p class="pure-button button-error">Billet invalide ou déjà utilisé</p>
+					% end
+				% end
+			</div>
+			 <div id="reader" style="width:300px;height:250px">
+			 </div>
+			 <p id="reader-status"></p>
+			 <form class="pure-form" method="post" action="/webscan/form">
+			 	<p>
+			 		Code
+				 	<input type="text" name="code" id="code">
+				</p>
+				<p>
+					Places à valider
+				 	<input type="number" name="qt" id="qt" value="1">
+			 	</p>
+			 	<input type="hidden" name="ajax" value="False">
+			 	<button type="submit" id="validate" class="pure-button pure-button-primary">Vérifier</button>
+			 </form>
+		</div>
+		<div class="pure-u-1-24 pure-u-md-1-12 pure-u-sm-1-24"></div>
+	</div>
+	<footer>
+		<script type="text/javascript" src="/media/js/jquery.js"></script>
+		<script type="text/javascript" src="/media/js/jsqrcode-combined.min.js"></script>
+		<script type="text/javascript" src="/media/js/html5-qrcode.js"></script>
+		<script>
+		$('#reader').html5_qrcode(function(data){
+			// do something when code is read
+			$('#code').val(data);
+			$('#reader-status').empty().prepend("Lecture réusise").attr('class', 'pure-button button-success');
+			$('#validate').prop('disabled', true);
+			$('#response').empty();
+			$.post("/webscan/form", {
+				code: $("#code").val(),
+				qt: $("#qt").val(),
+				ajax: "True"
+			}).done(function(data){
+				if (data['valid']){
+					if (data['child']){
+						$("#response").prepend('<p class="pure-button button-warning" style="font-size: 30px">Ceci est une place pour mineur !</p><br>');
+					}
+					$("#response").prepend('<p class="pure-button button-success">Billet valide : ' + data['av'] + ' places restantes</p>');
+				} else {
+					$("#response").prepend('<p class="pure-button button-error">Billet invalide ou déjà utilisé</p>');
+				}
+			});
+			$('#validate').prop('disabled', false);
+		},
+		function(error){
+			//show read errors
+			$('#reader-status').empty().prepend("Erreur de lecture du qr code, veuillez réessayer").attr('class', 'pure-button button-warning');
+		}, function(videoError){
+			$('#reader').prepend("Accès à la caméra impossible").attr('class', 'button-error');
+		}
+		);
+		</script>
+	</footer>
+</body>
+</html>

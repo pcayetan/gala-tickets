@@ -16,6 +16,9 @@
 				<h2>Section de téléchargement</h2>
 				<div>
 					<p>
+						Application de scan version web : <a class="pure-button pure-button-primary" href="/webscan">Application web</a>
+					</p>
+					<p>
 						Application de vérification : <a class="pure-button pure-button-primary" href="/gala.apk">Gala de prestige</a>
 					</p>
 					<p>

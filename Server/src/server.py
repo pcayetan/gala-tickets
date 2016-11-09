@@ -1,14 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# @Author: klmp200
+# @Author: Bartuccio Antoine (Sli) (klmp200)
 # @Date:   2016-07-03 17:57:28
 # @Last Modified by:   klmp200
-# @Last Modified time: 2016-11-08 00:46:33
+# @Last Modified time: 2016-11-09 01:00:25
 
 from bottle import Bottle, static_file, request, template, redirect
 from bottle.ext import sqlite
+import hmac
+import hashlib
+import json
 import datetime
 import settings
+
+KEYS = []
+with open('../data/keys.json', 'r') as json_data:
+    KEYS = json.load(json_data)
+
+
+def SafeInt(string):
+    if string.isdecimal():
+        return int(string)
+    else:
+        return 0
+
+
+def find_product(keys, id_product):
+    product = SafeInt(id_product)
+    for obj in keys:
+        if obj['id'] == product:
+            return obj
+    return None
 
 app = Bottle()
 plugin = sqlite.Plugin(dbfile='../data/sqliteDB.db')
@@ -103,6 +125,63 @@ def DisplayAdminAjax(db):
     return dict(data=tickets)
 
 
+@app.route('/webscan', method='GET')
+def ScanTicketView(status=None):
+    """
+        A web app to check tickets
+    """
+    response = ObtainGetArgs(request.query, ['av', 'valid', 'child'])
+    return template('scan.simple', response=response)
+
+
+@app.route('/webscan/form', method='POST')
+def CheckTicketPost(db):
+    """
+        Recieve form and validate data
+    """
+    code = request.forms.get('code').upper()
+    code_list = code.split()
+    is_child = False
+    if len(code_list) >= 4:
+        verif_key = code_list.pop(-1)
+        place_tot = SafeInt(code_list.pop(-1))
+        product_type = code_list.pop(1)
+        product = find_product(KEYS, product_type)
+    else:
+        verif_key = ""
+        product = {}
+
+    if CheckHmac(code, product, verif_key) and place_tot > 0:
+        print("HMAC")
+        used_qt = SafeInt(request.forms.get('qt'))
+        is_child = product['is_child']
+
+        if used_qt < 1 or used_qt > place_tot:
+            status = {'available': 0, 'valid': False}
+        else:
+            status = Validate(db, place_tot, verif_key, 1, product_type)
+    else:
+        status = {'available': 0, 'valid': False}
+
+    if request.forms.get('ajax') == "True":
+        return dict({'av': status['available'], 'valid': status['valid'], 'child': is_child})
+    else:
+        redirect('/webscan?av={}&valid={}&child={}'.format(status['available'],
+                                                           status['valid'], is_child))
+
+
+def CheckHmac(code, product, verif_key):
+    new_code = code.split(' ')
+    new_code.pop(-1)
+    code = ' '.join(new_code)
+    if product:
+        true_key = hmac.new(bytes(product['key'], 'utf-8'),
+                            bytes(code, 'utf-8'), hashlib.sha1).hexdigest()
+        return hmac.compare_digest(true_key[:8].upper(), verif_key)
+    else:
+        return False
+
+
 def SearchDb(db, args):
     """
         Qwery used in db
@@ -148,8 +227,24 @@ def EditTicketQuantity(db, id_ticket, nb):
     redirect('/admin')
 
 
+def Validate(db, place_tot, verif_key, place_used, product_type):
+    """
+        Verify in bdd if the ticket exists and create it
+        Return if it's valid and quantity avaliable
+    """
+    ticket = db.execute('SELECT * from ticket where verifKey=:key and totalPlaces=:nb and productType=:type',
+                        {"key": verif_key, "nb": place_used, 'type': product_type}).fetchone()
+    data = {'nb': place_tot, 'qt': place_used, 'verif': verif_key, 'type': product_type}
+    if (ticket is None):
+        message = NewEntry(db, data)
+    else:
+        message = UpdateEntry(db, data, ticket)
+
+    return message
+
+
 @app.route('/validate', method='POST')
-def Validate(db):
+def ValidateApi(db):
     """
         Verify in bdd if the ticket exists and create it
         Return a json to the app
@@ -157,13 +252,8 @@ def Validate(db):
 
     try:
         send = request.json
-        ticket = db.execute('SELECT * from ticket where verifKey=:key and totalPlaces=:nb',
-                            {"key": send['verif'], "nb": send['nb']}).fetchone()
-
-        if (ticket is None):
-            message = NewEntry(db, send)
-        else:
-            message = UpdateEntry(db, send, ticket)
+        print(send)
+        message = Validate(db, send['nb'], send['verif'], send['qt'], send['type'])
 
     except:
         message = '<p>Error processing data</p>'
@@ -180,8 +270,8 @@ def NewEntry(db, data):
         "available": available,
         "valid": True
     }
-    db.execute('INSERT into ticket(verifKey, availablePlaces, totalPlaces, validationDate) values (?, ?, ?, ?)',
-               (data['verif'], available, data['nb'], datetime.datetime.now().strftime('%Hh %Mmin %Ss')))
+    db.execute('INSERT into ticket(verifKey, availablePlaces, totalPlaces, validationDate, productType) values (?, ?, ?, ?, ?)',
+               (data['verif'], available, data['nb'], datetime.datetime.now().strftime('%Hh %Mmin %Ss'), data['type']))
 
     return dict(response)
 

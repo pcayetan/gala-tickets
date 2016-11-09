@@ -169,10 +169,10 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
                     idFound = true;
 
                     if (key.getIs_child()) {
-                        showChildDialog(Read_QR_Code.this, keyTicket, nbrPlaceTot, nbrPlaceSelect);
+                        showChildDialog(Read_QR_Code.this, keyTicket, nbrPlaceTot, nbrPlaceSelect, String.valueOf(idTicket));
                     }
                     else {
-                        sendRequest(keyTicket, nbrPlaceTot, nbrPlaceSelect);
+                        sendRequest(keyTicket, String.valueOf(idTicket), nbrPlaceTot, nbrPlaceSelect);
                     }
                 }
             }
@@ -183,12 +183,12 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
     }
 
     private AlertDialog showChildDialog(final Activity act, final String hash, final int nbrPlaceTot,
-                                        final int nbrPlaceSelect) {
+                                        final int nbrPlaceSelect, final String type) {
         AlertDialog.Builder childDialog = new AlertDialog.Builder(act);
         childDialog.setMessage(R.string.ebillet_mineur);
         childDialog.setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                sendRequest(hash, nbrPlaceTot, nbrPlaceSelect);
+                sendRequest(hash, type, nbrPlaceTot, nbrPlaceSelect);
             }
         });
         childDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -199,7 +199,7 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
         return childDialog.show();
     }
 
-    private void sendRequest(String hash, int nbrPlaceTot, int nbrPlaceSelect) {
+    private void sendRequest(String hash, String type, int nbrPlaceTot, int nbrPlaceSelect) {
         JSONObject jsonParams = new JSONObject();
         StringEntity entity = null;
 
@@ -208,6 +208,7 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
             jsonParams.put("verif", hash);
             jsonParams.put("nb", nbrPlaceTot);
             jsonParams.put("qt", nbrPlaceSelect);
+            jsonParams.put("type", type);
 
             // Set JSON parameters for Post request
             entity = new StringEntity(jsonParams.toString());

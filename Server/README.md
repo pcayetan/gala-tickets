@@ -16,7 +16,7 @@ Cette application permet de centraliser les données relevées par les différen
 │                                            Réception des clefs                                         │
 │                                             │            │                                             │
 │    ┌───────────────────────────────────┐    │            │                                             │
-│    │             Validate              │    │            │    ┌───────────────────────────────────┐    │
+│    │             ValidateApi           │    │            │    ┌───────────────────────────────────┐    │
 │    │  ┌──────────────────────────────┐ │    │            │    │                                   │    │
 │    │  │                              │ │    │            │    │     Vérification du code bar      │    │
 │    │  │   Teste d'existence en BDD   │◀┼────┼────┐       │    │                                   │    │
@@ -74,7 +74,8 @@ Requête vers /validate : (utilise la méthode POST)
 
 ```json
 {
-	"verif": "EXAMPLE", // Code de vérification du billet
+	"verif": "EXAMPLE", // Clef de vérification
+	"type": "89", // Type de produit
 	"nb": 9, // Nombre de places totales du billet
 	"qt": 2 // Quantité à valider
 }
