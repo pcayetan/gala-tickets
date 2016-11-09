@@ -1,0 +1,48 @@
+/*
+* @Author: Bartuccio Antoine (Sli) (klmp200)
+* @Date:   2016-11-09 10:50:39
+* @Last Modified by:   klmp200
+* @Last Modified time: 2016-11-09 11:34:09
+*/
+
+.alert {
+	color: white;
+	text-align:center;
+	display:inline-block;
+	box-sizing:border-box;
+	zoom:1;
+	line-height:normal;
+	border:1px solid #999;
+	border:0 rgba(0,0,0,0);
+	font-size:100%;
+	padding:.5em 1em;
+}
+
+.alert-success {
+	background: rgb(28, 184, 65);
+}
+
+.alert-error {
+    background: rgb(202, 60, 60); /* this is a maroon */
+}
+
+.alert-warning {
+    background: rgb(223, 117, 20); /* this is an orange */
+}
+
+#app {
+	text-align:center;
+	display:inline-block;
+}
+
+#reader {
+	width:300px;
+	height:250px;
+	margin: 0 auto;
+	margin-bottom: 5px;
+	text-align: center;
+}
+
+#validate {
+	margin-bottom: 10%;
+}
