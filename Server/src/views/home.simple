@@ -16,26 +16,52 @@
 				<h2>Section de téléchargement</h2>
 				<div>
 					<p>
+						Application de vérification : <a class="pure-button pure-button-primary" href="/media/apk/gala.apk">Gala de prestige</a>
+					</p>
+					<p>
+						Application de scan : <a class="pure-button pure-button-primary" href="/media/apk/scanner.apk">Barecode Reader</a>
+					</p>
+					<p>
 						Application de scan version web : <a class="pure-button pure-button-primary" href="/webscan">Application web</a>
 					</p>
 					<p>
-						Application de vérification : <a class="pure-button pure-button-primary" href="/gala.apk">Gala de prestige</a>
-					</p>
-					<p>
-						Application de scan : <a class="pure-button pure-button-primary" href="/scanner.apk">Barecode Reader</a>
+						Firefox : <a class="pure-button pure-button-primary" href="/media/apk/firefox.apk">Firefox</a>
 					</p>
 				</div>
-				<h2>Instructions d'installation</h2>
+				<h2>Instructions d'installation de l'application mobile</h2>
 				<div>
 					<p>Activez l'installation des applications de sources inconnues en allant dans paramètres -> sécurité -> sources inconnues (voir exemple suivant)</p>
 					<img src="/media/img/tuto1.png">
 					<img src="/media/img/tuto2.png">
 					<p>Téléchargez et installez l'application gala</p>
+					<p>
+						Application de vérification : <a class="pure-button pure-button-primary" href="/media/apk/gala.apk">Gala de prestige</a>
+					</p>
 					<p>Si aucun lecteur de qr code n'est installé, prenez celle fournie sur ce site</p>
+					<p>
+						Application de scan : <a class="pure-button pure-button-primary" href="/media/apk/scanner.apk">Barecode Reader</a>
+					</p>
 				</div>
-				<h3>Fonctionnement</h3>
+				<h3>Fonctionnement de l'application mobile</h3>
 				<div>
-					Une fois que tout a été installé, il suffit de lancer l'application gala de prestige et y entrer les informations du serveur.
+					<p>Une fois que tout a été installé, il suffit de lancer l'application gala de prestige et y entrer les informations du serveur.</p>
+					<p>Le nombre de places à valider correspond au nombre de personnes passant avec ce billet au moment de la validation. Il doit être rempli avant le scan et est de 1 par défaut.</p>
+					<img src="/media/img/tuto3.png">
+					<img src="/media/img/tuto4.png">
+				</div>
+				<h3>Fonctionnement de l'application web</h3>
+				<div>
+					À cause de certaines limitations imposées par google, l'application web n'est pleinement fonctionnelle que sur ordinateur (hors chrome) et téléphone Android avec Firefox (téléchargeable sur cette page).
+					<p>
+						Firefox : <a class="pure-button pure-button-primary" href="/media/apk/firefox.apk">Firefox</a>
+					</p>
+
+					Avec cette application, il suffit de passer le téléphone devant le code à scanner et d'attendre la confirmation visuelle et sonore.
+
+					L'application est accessible ici :
+					<p>
+						Application de scan version web : <a class="pure-button pure-button-primary" href="/webscan">Application web</a>
+					</p>
 				</div>
 			</div>
 		</div>

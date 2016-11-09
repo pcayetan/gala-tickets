@@ -94,6 +94,11 @@ Réception :
 
 Il est possible d'accéder à /admin pour obtenir une liste de toutes les validations effectuées et d'annuler le passage d'un billet.
 
+# Application web
+
+Ce serveur fournit une application web à /webscan
+Cependant, due à une limitation de chrome (qui n'autorise le partage de la caméra que sur une connexion https), celle-ci ne fonctionne pleinement qu'avec Firefox.
+
 # Installation du serveur sur une machine
 
 Le serveur a été testé sur un raspberry pi 2 modèle B.

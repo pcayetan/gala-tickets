@@ -50,6 +50,7 @@
 		<div class="pure-u-1-24 pure-u-md-1-12 pure-u-sm-1-24"></div>
 	</div>
 	<footer>
+		<audio auto src="/media/sound/beep.mp3" id="beep" enablejavascript="true"></audio>
 		<script type="text/javascript" src="/media/js/jquery.js"></script>
 		<script type="text/javascript" src="/media/js/jsqrcode-combined.min.js"></script>
 		<script type="text/javascript" src="/media/js/html5-qrcode.js"></script>
@@ -57,7 +58,8 @@
 		$('#reader').html5_qrcode(function(data){
 			// do something when code is read
 			$('#code').val(data);
-			$('#reader-status').empty().prepend("Lecture réusise").attr('class', 'alert alert-success');
+			$('#reader-status').empty().prepend("Lecture réussie").attr('class', 'alert alert-success');
+			document.getElementById("beep").play();
 			$('#validate').prop('disabled', true);
 			$('#response').empty();
 			$('#reader').attr('id', 'reader-off');

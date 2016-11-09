@@ -3,7 +3,7 @@
 # @Author: Bartuccio Antoine (Sli) (klmp200)
 # @Date:   2016-07-03 17:57:28
 # @Last Modified by:   klmp200
-# @Last Modified time: 2016-11-09 01:00:25
+# @Last Modified time: 2016-11-10 00:43:04
 
 from bottle import Bottle, static_file, request, template, redirect
 from bottle.ext import sqlite
@@ -49,22 +49,6 @@ def serialize_table(table):
             dict_tmp[key] = row[key]
         obj.append(dict_tmp)
     return obj
-
-
-@app.route('/gala.apk')
-def GetApp():
-    """
-        Allow to download the gala
-    """
-    return static_file("gala.apk", root="../data/")
-
-
-@app.route('/scanner.apk')
-def GetScan():
-    """
-        Allow to download the qr code reader
-    """
-    return static_file("scanner.apk", root="../data/")
 
 
 @app.route('/')
