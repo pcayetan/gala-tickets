@@ -3,7 +3,7 @@
 # @Author: Bartuccio Antoine (Sli) (klmp200)
 # @Date:   2016-07-03 17:57:28
 # @Last Modified by:   klmp200
-# @Last Modified time: 2016-11-10 00:43:04
+# @Last Modified time: 2016-11-14 02:29:45
 
 from bottle import Bottle, static_file, request, template, redirect
 from bottle.ext import sqlite
@@ -31,6 +31,18 @@ def find_product(keys, id_product):
         if obj['id'] == product:
             return obj
     return None
+
+
+def get_banlist():
+    with open('../data/banlist.json', 'r') as json_data:
+        return json.load(json_data)
+
+
+def is_banned(code):
+    if code in get_banlist():
+        return True
+    else:
+        return False
 
 app = Bottle()
 plugin = sqlite.Plugin(dbfile='../data/sqliteDB.db')
@@ -67,6 +79,14 @@ def GetKeys():
     return static_file("keys.json", root="../data/")
 
 
+@app.route('/banlist')
+def GetBanlist():
+    """
+        Return json file for banned tickets
+    """
+    return static_file("banlist.json", root="../data/")
+
+
 @app.route('/delete/<db_id>')
 def DeleteTicket(db, db_id=None):
     """
@@ -95,7 +115,8 @@ def DisplayAdmin(db):
     """
     form = ObtainGetArgs(request.query, ['id', 'verifKey'])
     tickets = SearchDb(db, form)
-    return template('admin.simple', table=tickets, form=form)
+    return template('admin.simple', table=tickets, form=form,
+                    banlist=get_banlist())
 
 
 @app.route('/admin/ajax', method='GET')
@@ -114,7 +135,7 @@ def ScanTicketView(status=None):
     """
         A web app to check tickets
     """
-    response = ObtainGetArgs(request.query, ['av', 'valid', 'child'])
+    response = ObtainGetArgs(request.query, ['av', 'valid', 'child', 'banned'])
     return template('scan.simple', response=response)
 
 
@@ -126,6 +147,7 @@ def CheckTicketPost(db):
     code = request.forms.get('code').upper()
     code_list = code.split()
     is_child = False
+    banned = is_banned(code)
     if len(code_list) >= 4:
         verif_key = code_list.pop(-1)
         place_tot = SafeInt(code_list.pop(-1))
@@ -135,8 +157,7 @@ def CheckTicketPost(db):
         verif_key = ""
         product = {}
 
-    if CheckHmac(code, product, verif_key) and place_tot > 0:
-        print("HMAC")
+    if not banned and CheckHmac(code, product, verif_key) and place_tot > 0:
         used_qt = SafeInt(request.forms.get('qt'))
         is_child = product['is_child']
 
@@ -148,10 +169,12 @@ def CheckTicketPost(db):
         status = {'available': 0, 'valid': False}
 
     if request.forms.get('ajax') == "True":
-        return dict({'av': status['available'], 'valid': status['valid'], 'child': is_child})
+        return dict({'av': status['available'], 'valid': status['valid'],
+                     'child': is_child, 'banned': banned})
     else:
-        redirect('/webscan?av={}&valid={}&child={}'.format(status['available'],
-                                                           status['valid'], is_child))
+        redirect('/webscan?av={}&valid={}&child={}&banned={}'.format(status['available'],
+                                                                     status['valid'],
+                                                                     is_child, banned))
 
 
 def CheckHmac(code, product, verif_key):

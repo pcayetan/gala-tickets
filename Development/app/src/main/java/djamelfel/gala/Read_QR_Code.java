@@ -40,6 +40,7 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
 
     private static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     private ArrayList<Key_List> key_list = null;
+    private ArrayList<String> ban_list = null;
     private String server;
     private EditText _nbrPlace;
     private EditText _barCode;
@@ -52,6 +53,7 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
         Intent intent = getIntent();
         if (intent != null) {
             key_list = intent.getParcelableArrayListExtra("key_list");
+            ban_list = intent.getStringArrayListExtra("ban_list");
             server = intent.getStringExtra("server");
         }
 
@@ -149,6 +151,11 @@ public class Read_QR_Code extends ActionBarActivity implements View.OnClickListe
 
         if (nbrPlaceTot < nbrPlaceSelect) {
             display(getString(R.string.nbPlaceOversize), false);
+            return;
+        }
+
+        if (ban_list != null && ban_list.contains(result)){
+            display("Ce ticket est banni !", false);
             return;
         }
 

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,7 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
     private EditText _ipAddress;
     private EditText _portNumber;
     private ArrayList<Key_List> key_list;
+    private ArrayList<String> ban_list;
 
 
     @Override
@@ -46,6 +49,8 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
         validateIPAddress.setOnClickListener(this);
 
         key_list = new ArrayList<Key_List>();
+        ban_list = new ArrayList<String>();
+
     }
 
     @Override
@@ -88,8 +93,45 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
                         e.printStackTrace();
                     }
                     //Send key_list to next activity
+                    //Intent intent = new Intent(Login.this, Read_QR_Code.class);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    display(getString(R.string.serverError), false);
+                    button.setEnabled(true);
+                    button.setText(getText(R.string.connect));
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    display(getString(R.string.serverError), false);
+                    button.setEnabled(true);
+                    button.setText(getText(R.string.connect));
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                    display(getString(R.string.serverError), false);
+                    button.setEnabled(true);
+                    button.setText(getText(R.string.connect));
+                }
+
+            });
+            client.get(server + "/banlist", new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    try {
+                        for (int index = 0; index < response.length(); index++){
+                            ban_list.add(response.getString(index));
+                        }
+                    } catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                    //Send banlist to next activity
                     Intent intent = new Intent(Login.this, Read_QR_Code.class);
                     intent.putParcelableArrayListExtra("key_list", key_list);
+                    intent.putStringArrayListExtra("ban_list", ban_list);
                     intent.putExtra("server", server);
                     startActivity(intent);
                 }
@@ -114,7 +156,6 @@ public class Login extends ActionBarActivity implements View.OnClickListener {
                     button.setEnabled(true);
                     button.setText(getText(R.string.connect));
                 }
-
             });
         }
     }

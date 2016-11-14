@@ -20,6 +20,23 @@
 					<input type="text" name="verifKey" value="{{form['verifKey']}}"/>
 					<button type="submit" class="pure-button pure-button-primary">Rechercher</button>
 				</form>
+			% if len(banlist) > 0:
+				<h2>Tickets bannis</h2>
+				<table class="pure-table pure-table-bordered">
+				<thead>
+					<tr>
+						<th>Code</th>
+					</tr>
+				</thead>
+				<tbody>
+				% for code in banlist:
+					<tr>
+						<td>{{code}}</td>
+					</tr>
+				% end
+				</tbody>
+				</table>
+			% end
 			<h2>Données</h2>
 			<table class="pure-table pure-table-bordered">
 				<thead>

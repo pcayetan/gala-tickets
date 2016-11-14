@@ -21,6 +21,8 @@
 							<p class="alert alert-warning" style="font-size: 30px">Ceci est une place pour mineur !</p><br>
 							% end
 							<p class="alert alert-success">Billet valide : {{response['av']}} places restantes</p>
+						% elif response['banned'] and response['banned'] == "True":
+							<p class="alert alert-error">BILLET BANNI !</p>
 						% else:
 							<p class="alert alert-error">Billet invalide ou déjà utilisé</p>
 						% end
@@ -73,6 +75,8 @@
 					if (data['child']){
 						$("#response").prepend('<p class="alert alert-warning" style="font-size: 30px">Ceci est une place pour mineur !</p><br>');
 					}
+				} else if (data['banned']) {
+					$("#response").prepend('<p class="alert alert-error">BILLET BANNI !</p>');
 				} else {
 					$("#response").prepend('<p class="alert alert-error">Billet invalide ou déjà utilisé</p>');
 				}
