@@ -13,8 +13,8 @@
 		<div class="pure-u-22-24 pure-u-md-10-12 pure-u-sm-22-24">
 			<h1>Database administration</h1>
 			<h2>Recherche</h2>
-				<form class="pure-form" method="get" action="/admin">
-					Recherche par id :
+				<form class="pure-form" method="get" action="{{admin_url}}">
+					Recherche par id de produit :
 					<input type="text" name="id" value="{{form['id']}}"/>
 					Clef de vérification :
 					<input type="text" name="verifKey" value="{{form['verifKey']}}"/>
@@ -94,7 +94,7 @@
 					"id": getUrlParameter('id'),
 					"verifKey": getUrlParameter('verifKey')
 				};
-				$.get("/admin/ajax", args).done(function(data){
+				$.get("{{admin_url}}/ajax", args).done(function(data){
 					var to_write = "";
 					data['data'].forEach(function(ticket){
 						to_write += "<tr>";

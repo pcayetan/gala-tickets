@@ -3,7 +3,7 @@
 # @Author: Bartuccio Antoine (Sli) (klmp200)
 # @Date:   2016-07-03 17:57:28
 # @Last Modified by:   klmp200
-# @Last Modified time: 2016-11-14 02:29:45
+# @Last Modified time: 2016-11-15 23:29:33
 
 from bottle import Bottle, static_file, request, template, redirect
 from bottle.ext import sqlite
@@ -95,7 +95,7 @@ def DeleteTicket(db, db_id=None):
     if db_id:
         db.execute('DELETE from ticket where id=:id',
                    {"id": db_id})
-    redirect('/admin')
+    redirect(settings.ADMIN_PAGE_URL)
 
 
 @app.route('/media/<file:path>')
@@ -106,7 +106,7 @@ def Media(file=""):
     return static_file(file, root="./media/")
 
 
-@app.route('/admin', method='GET')
+@app.route(settings.ADMIN_PAGE_URL, method='GET')
 def DisplayAdmin(db):
     """
         Get data from database based on get data:
@@ -116,10 +116,11 @@ def DisplayAdmin(db):
     form = ObtainGetArgs(request.query, ['id', 'verifKey'])
     tickets = SearchDb(db, form)
     return template('admin.simple', table=tickets, form=form,
-                    banlist=get_banlist())
+                    banlist=get_banlist(),
+                    admin_url=settings.ADMIN_PAGE_URL)
 
 
-@app.route('/admin/ajax', method='GET')
+@app.route(settings.ADMIN_PAGE_URL + '/ajax', method='GET')
 def DisplayAdminAjax(db):
     """
         Get data from database same as DisplayAdmin
@@ -194,7 +195,7 @@ def SearchDb(db, args):
         Qwery used in db
     """
     if args['id'] or args['verifKey']:
-        table = db.execute("SELECT * from ticket where upper(verifKey) like :key or id =:id",
+        table = db.execute("SELECT * from ticket where upper(verifKey) like :key or productType=:id",
                            {"key": '%' + args['verifKey'].upper() + '%',
                             "id": args['id']}).fetchall()
     else:
@@ -231,7 +232,7 @@ def EditTicketQuantity(db, id_ticket, nb):
         if nb_new >= 0 and nb_new <= ticket['totalPlaces']:
             db.execute('UPDATE ticket SET availablePlaces=:av WHERE id=:id',
                        {"av": nb_new, "id": id_ticket})
-    redirect('/admin')
+    redirect(settings.ADMIN_PAGE_URL)
 
 
 def Validate(db, place_tot, verif_key, place_used, product_type):
