@@ -3,7 +3,7 @@
 # @Author: Bartuccio Antoine (Sli) (klmp200)
 # @Date:   2016-07-03 17:57:28
 # @Last Modified by:   klmp200
-# @Last Modified time: 2016-11-15 23:29:33
+# @Last Modified time: 2016-11-17 00:54:23
 
 from bottle import Bottle, static_file, request, template, redirect
 from bottle.ext import sqlite
@@ -165,7 +165,7 @@ def CheckTicketPost(db):
         if used_qt < 1 or used_qt > place_tot:
             status = {'available': 0, 'valid': False}
         else:
-            status = Validate(db, place_tot, verif_key, 1, product_type)
+            status = Validate(db, place_tot, verif_key, used_qt, product_type)
     else:
         status = {'available': 0, 'valid': False}
 
@@ -241,7 +241,7 @@ def Validate(db, place_tot, verif_key, place_used, product_type):
         Return if it's valid and quantity avaliable
     """
     ticket = db.execute('SELECT * from ticket where verifKey=:key and totalPlaces=:nb and productType=:type',
-                        {"key": verif_key, "nb": place_used, 'type': product_type}).fetchone()
+                        {"key": verif_key, "nb": place_tot, 'type': product_type}).fetchone()
     data = {'nb': place_tot, 'qt': place_used, 'verif': verif_key, 'type': product_type}
     if (ticket is None):
         message = NewEntry(db, data)
@@ -260,7 +260,6 @@ def ValidateApi(db):
 
     try:
         send = request.json
-        print(send)
         message = Validate(db, send['nb'], send['verif'], send['qt'], send['type'])
 
     except:
