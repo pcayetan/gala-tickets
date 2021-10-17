@@ -2,7 +2,93 @@
 
 Cette application permet de centraliser les données relevées par les différents clients Android vérifiant les billets à l'entrée du gala.
 
-## Schémas de fonctionnement
+## Installation
+
+* Il est recommendé d'installer Poetry pour utiliser et développer ce logiciel. Merci de suivre les instructions ici précentes : [https://python-poetry.org/docs/#installation](https://python-poetry.org/docs/#installation)
+* La génération de la base de donnée nécessite sqlite3, c'est généralement pré-installé sur le système, si ça ne l'est pas, plus d'informations sur : [https://www.sqlite.org/download.html](https://www.sqlite.org/download.html)
+
+```bash
+poetry install
+poetry shell
+
+# Création de la base de donnée
+./createDB.sh
+
+# Configuration du server
+## Liste de tickets bannis
+cp data/banlist.json.example data/banlist.json
+nano data/banlist.json # Voir configuration plus bas
+
+## Clefs de vérification des tickets
+cp data/keys.json.example data/keys.json
+nano data/keys.json # Voir configuration plus bas
+
+# Lancement du serveur
+cd src
+./server.py # Disponnible sur localhost:8080/webscan
+
+# Avant la mise en prod
+echo "DEBUG = False" > settings_custom.py
+nano src/settings_custom.py # Voir configuration plus bas
+```
+
+## Configuration
+### Tickets bannis banlist.json
+
+C'est une simple liste de numéros de tickets bannis à remplire.
+Exemple:
+
+```json
+[
+    "23 19 33 1 04B5F7BB",
+    "23 19 41 1 F11B7EA5"
+]
+```
+
+### Clefs de vérification keys.json
+
+Ce fichier contint les clefs privées utilisées pour valides les billets. Chaque billet contient un numéro de produit et sa clef privée associée. C'est une liste de dictionnaire suivant le format de l'exemple suivant:
+
+```json
+[
+    {
+        "id": 1120, // Identifiant du produit
+        "key": "VDLV7897IEetisuare", // clef privée
+        "is_child": true // Si c'est un ticket pour enfant ou non
+    },
+    {
+        "id": 7988,
+        "key": "TISEdodp7897tesiuaV8V",
+        "is_child": false
+    }
+]
+```
+
+### Configuration du serveur settings\_custom.py
+
+```python
+HOST = '0.0.0.0' # Filtre d'écoute (ne généralement pas changer)
+PORT = '8080' # Port d'écoute
+DEBUG = True # Mode debug (METTRE À False EN PRODUCTION)
+
+ADMIN_PAGE_URL = '/admin' # URL de la page d'administration
+```
+
+## Application web
+
+### Scan des tickets /webscan
+
+L'interface est disponnible en accédant à `/webscan` sur le serveur.
+Due à des limitations de sécurité sur les navigateurs récents, la caméra ne fonctionne pas sans support du https. Pour contourner cela, il est recommandé d'utiliser **les douchettes à QR code du crunchlab**.
+
+## Interface d'administration /admin
+
+Il est possible et **recommandé** d'accéder à `/admin` pour obtenir une liste de toutes les validations effectuées et d'annuler le passage d'un billet. L'accès à cette page est configurable dans les paramètres du serveur (plus haut).
+
+Cette page est **très réconfortante pour les bénévoles**, il est recommandé de la laisser toujours ouverte.
+
+
+## Schémas de fonctionnement de l'API (déprécié)
 
 ```
            ┌─────────────────────────────────────────────┐            ┌─────────────────────────────────────────────┐
@@ -102,16 +188,7 @@ Réception :
 }
 ```
 
-## Interface d'administration
-
-Il est possible d'accéder à /admin pour obtenir une liste de toutes les validations effectuées et d'annuler le passage d'un billet.
-
-# Application web
-
-Ce serveur fournit une application web à /webscan
-Cependant, due à une limitation de chrome (qui n'autorise le partage de la caméra que sur une connexion https), celle-ci ne fonctionne pleinement qu'avec Firefox.
-
-# Installation du serveur sur une machine
+# Installation du serveur sur une machine (originales de 2016)
 
 Le serveur a été testé sur un raspberry pi 2 modèle B.
 

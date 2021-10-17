@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "ebillet-server"
+version = "1"
+description = "Server with web app to check e-billets"
+authors = ["Sli <antoine@bartuccio.fr>"]
+license = "GPL-3.0-only"
+build = "build.py"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+bottle = "^0.12.19"
+bottle-sqlite = "^0.2.0"
+Paste = "^3.5.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
