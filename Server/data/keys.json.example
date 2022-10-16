@@ -2,11 +2,14 @@
 	{
 		"id": 1120,
 		"key": "VDLV7897IEetisuare",
-		"is_child": true
+		"is_child": true,
+		"is_recharge": false
 	},
 	{
-		"id": 7988,
-		"key": "TISEdodp7897tesiuaV8V",
-		"is_child": false
+		"id": 1156,
+		"key": "b'vO41Cb6VxAqyWlEWjsBjufjFvIDHfTPIvnR8ftqEBhg='",
+		"is_child": false,
+		"is_recharge": true,
+		"value_recharge": 50
 	}
 ]

@@ -6,9 +6,10 @@
 
 HOST = '0.0.0.0'
 PORT = '8080'
-DEBUG = True
+DEBUG = False
 
 ADMIN_PAGE_URL = '/admin'
+
 
 # Loads custom settings
 
